@@ -62,15 +62,30 @@ contract SimpleBond
     }
     
     //WITHDRAW FUNCTIONS:
-    function issuerWithdraw(uint withdrawAmount) onlyIssuer public returns (uint remainingBal) {
-        if(balances[Issuer] >= withdrawAmount) {
+    function Withdraw(uint withdrawAmount) public returns (uint remainingBal) {
+        if(msg.sender == Issuer)
+        {
+            if(balances[Issuer] >= withdrawAmount) {
 
-            balances[Issuer] -= withdrawAmount;
+                balances[Issuer] -= withdrawAmount;
 
-            Issuer.transfer(withdrawAmount);
+                Issuer.transfer(withdrawAmount);
+            
+            }
+            return balances[Issuer];
         }
+        else if(msg.sender == Lender)
+        {
+                if(balances[Lender] >= withdrawAmount) {
 
-        return balances[Issuer];
+                balances[Lender] -= withdrawAmount;
+
+                Lender.transfer(withdrawAmount);
+            }
+            return balances[Lender];
+        }
+        
+       
     }
     
     function lenderWithdrawSuccess(uint withdrawAmount) onlyLender public returns (uint remainingBal) {
