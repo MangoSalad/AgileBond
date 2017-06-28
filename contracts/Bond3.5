@@ -1,0 +1,122 @@
+pragma solidity ^0.4.11;
+
+contract SimpleBond 
+{
+    //STATE VARIABLES:
+    address public Issuer;
+    address public Lender;
+    uint256 public Amount;
+    uint256 public twentyPercent;
+    uint public creationTime = now;
+    
+    //MAPPING:
+    mapping(address => uint) balances;
+    
+    
+    //MODIFIERS:
+    modifier onlyIssuer()
+    {
+        if(msg.sender == Issuer)_;
+        else throw;
+    }
+    
+        modifier onlyLender()
+    {
+        if(msg.sender == Lender)_;
+        else throw;
+    }
+    
+    modifier notPaid() { 
+        if(now >= creationTime+1 minutes)_;
+    }
+    
+    //PAYABLE FUNCTION:
+    function Issuer20() payable
+    {
+        if(msg.sender !=Lender)
+        {
+        Issuer = msg.sender;
+        twentyPercent = msg.value; 
+        Amount = 5*(this.balance);
+        }
+        else throw;
+    }
+    
+    function lenderBond() payable returns(uint256 IssuerBal)
+    {
+        if(msg.sender != Issuer)
+        { 
+            Lender = msg.sender;
+            if(msg.value != Amount)throw;
+            balances[Issuer] += msg.value;
+            return balances[Issuer];
+        }
+        else throw;
+    }
+    
+    function issuerRepayment() payable onlyIssuer returns(uint256 lenderBal)
+    {
+        balances[Lender] += msg.value;
+        return balances[Lender];
+    }
+    
+    //WITHDRAW FUNCTIONS:
+    function Withdraw(uint withdrawAmount) public returns (uint remainingBal) {
+        if(msg.sender == Issuer)
+        {
+            if(balances[Issuer] >= withdrawAmount) {
+
+                balances[Issuer] -= withdrawAmount;
+
+                Issuer.transfer(withdrawAmount);
+            
+            }
+            return balances[Issuer];
+        }
+        else if(msg.sender == Lender)
+        {
+                if(balances[Lender] >= withdrawAmount) {
+
+                balances[Lender] -= withdrawAmount;
+
+                Lender.transfer(withdrawAmount);
+            }
+            return balances[Lender];
+        }
+        
+       
+    }
+    
+    function lenderWithdrawSuccess(uint withdrawAmount) onlyLender public returns (uint remainingBal) {
+        if(balances[Lender] >= withdrawAmount) {
+            
+            balances[Lender] -= withdrawAmount;
+            
+            Lender.transfer(withdrawAmount);
+        }
+
+        return balances[Lender];
+    }
+    
+    function lenderWithdrawFail() onlyLender notPaid public returns (uint256 twentyPercent) {
+        if(balances[Lender] + twentyPercent >= twentyPercent) {
+            // Note the way we deduct the balance right away, before sending - due to
+            // the risk of a recursive call that allows the caller to request an amount greater
+            // than their balance
+            Lender.transfer(twentyPercent);
+            twentyPercent = 0;
+        }
+        return twentyPercent;
+    }
+    
+    
+    //GETTERS:
+    function getBalance() constant returns(uint256)
+    {
+        return this.balance;
+    }
+        function getLender() constant returns(uint256)
+    {
+        return balances[Lender];
+    }
+}
