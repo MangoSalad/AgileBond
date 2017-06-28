@@ -28,8 +28,12 @@ contract SimpleBond
     
     modifier notPaid() {
         
-        if(now >= creationTime+1 minutes)_;
+        if(now >= creationTime+10 seconds){
         balances[Lender] += twentyPercent;
+        _;
+        }
+        else throw;
+        
     }
     
     //PAYABLE FUNCTION:
@@ -63,9 +67,7 @@ contract SimpleBond
     }
     
     //WITHDRAW FUNCTIONS:
-    function Withdraw(uint withdrawAmount) public returns (uint remainingBal) {
-        if(msg.sender == Issuer)
-        {
+    function issuerWithdraw(uint withdrawAmount) onlyIssuer public returns (uint issuerBal) {
             if(balances[Issuer] >= withdrawAmount) {
 
                 balances[Issuer] -= withdrawAmount;
@@ -74,13 +76,14 @@ contract SimpleBond
             
             }
             return balances[Issuer];
-        }
     }
     
-    function lenderWithdrawSuccess(uint withdrawAmount) onlyLender public returns (uint remainingBal) {
+    //CALL IF ISSUER REPAYS THE DEBT
+    function lenderWithdrawSuccess(uint withdrawAmount) onlyLender public returns (uint lenderBal) {
         if(balances[Lender] >= withdrawAmount) {
             
             balances[Lender] -= withdrawAmount;
+            balances[Issuer] += twentyPercent;
             
             Lender.transfer(withdrawAmount);
         }
@@ -88,15 +91,14 @@ contract SimpleBond
         return balances[Lender];
     }
     
-    function lenderWithdrawFail(uint withdrawAmount) onlyLender notPaid public returns (uint256 remainingBal) {
+    //CALL IF THE ISSUER DOES NOT REPAY THE DEBT
+    function lenderWithdrawFail(uint withdrawAmount) onlyLender notPaid public returns (uint256 lenderBal) {
         if(balances[Lender] >= withdrawAmount) {
-            // Note the way we deduct the balance right away, before sending - due to
-            // the risk of a recursive call that allows the caller to request an amount greater
-            // than their balance
+            balances[Lender] -= withdrawAmount;
             
             Lender.transfer(withdrawAmount);
         }
-        return this.balance;
+        return balances[Lender];
     }
     
     
@@ -104,9 +106,5 @@ contract SimpleBond
     function getBalance() constant returns(uint256)
     {
         return this.balance;
-    }
-        function getLender() constant returns(uint256)
-    {
-        return balances[Lender];
     }
 }
