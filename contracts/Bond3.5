@@ -91,7 +91,7 @@ contract SimpleBond
     
     //CALL IF ISSUER REPAYS THE DEBT
     function lenderWithdrawSuccess(uint withdrawAmount) onlyLender public returns (uint lenderBal) {
-        if(balances[Lender] >= withdrawAmount) {
+        if(balances[Lender] == withdrawAmount) {
             
             balances[Lender] -= withdrawAmount;
             balances[Issuer] += twentyPercent;
@@ -119,5 +119,9 @@ contract SimpleBond
     function getBalance() constant returns(uint256)
     {
         return this.balance;
+    }
+    function getIssuer() constant returns(uint256)
+    {
+        return balances[Issuer];
     }
 }
