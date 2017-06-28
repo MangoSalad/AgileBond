@@ -26,8 +26,10 @@ contract SimpleBond
         else throw;
     }
     
-    modifier notPaid() { 
+    modifier notPaid() {
+        
         if(now >= creationTime+1 minutes)_;
+        balances[Lender] += twentyPercent;
     }
     
     //PAYABLE FUNCTION:
@@ -73,18 +75,6 @@ contract SimpleBond
             }
             return balances[Issuer];
         }
-        else if(msg.sender == Lender)
-        {
-                if(balances[Lender] >= withdrawAmount) {
-
-                balances[Lender] -= withdrawAmount;
-
-                Lender.transfer(withdrawAmount);
-            }
-            return balances[Lender];
-        }
-        
-       
     }
     
     function lenderWithdrawSuccess(uint withdrawAmount) onlyLender public returns (uint remainingBal) {
@@ -98,15 +88,15 @@ contract SimpleBond
         return balances[Lender];
     }
     
-    function lenderWithdrawFail() onlyLender notPaid public returns (uint256 twentyPercent) {
-        if(balances[Lender] + twentyPercent >= twentyPercent) {
+    function lenderWithdrawFail(uint withdrawAmount) onlyLender notPaid public returns (uint256 remainingBal) {
+        if(balances[Lender] >= withdrawAmount) {
             // Note the way we deduct the balance right away, before sending - due to
             // the risk of a recursive call that allows the caller to request an amount greater
             // than their balance
-            Lender.transfer(twentyPercent);
-            twentyPercent = 0;
+            
+            Lender.transfer(withdrawAmount);
         }
-        return twentyPercent;
+        return this.balance;
     }
     
     
