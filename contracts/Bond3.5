@@ -23,19 +23,20 @@ contract SimpleBond
     //MODIFIERS:
     modifier onlyIssuer()
     {
-        if(msg.sender == Issuer)_;
-        else throw;
+        require(msg.sender == Issuer);
+        _;
     }
     
         modifier onlyLender()
     {
-        if(msg.sender == Lender)_;
-        else throw;
+        require(msg.sender == Lender);
+        _;
     }
     
-    modifier notPaid() {
-        
-        if(now >= creationTime+10 seconds){
+    modifier notPaid() 
+    {
+        if(now >= creationTime+10 seconds)
+        {
         balances[Lender] += twentyPercent;
         _;
         }
