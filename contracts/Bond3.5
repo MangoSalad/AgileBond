@@ -15,7 +15,9 @@ contract SimpleBond
     mapping(address => uint) balances;
     
     //EVENTS:
-    event issuerPaid(string _msg, address user, uint amount);
+    event txnOccured(string _msg, address user, uint amount);
+    
+    /*
     event lenderPaid(string _msg, address user, uint amount);
     event lenderWithdrewFail(string _msg, address user, uint amount);
     event lenderWithdrewSuccess(string _msg, address user, uint amount);
@@ -23,6 +25,7 @@ contract SimpleBond
     event issuerWithdrew(string _msg, address user, uint amount);
     event couponDeposited(string _msg, address user, uint amount);
     event couponWithdrew(string _msg, address user, uint amount);
+     */
      
     //MODIFIERS:
     modifier onlyIssuer()
@@ -51,13 +54,11 @@ contract SimpleBond
     modifier issuerLocked()
     {
         require(issuerLock== false);_;
-
     }
     
     modifier lenderLocked()
     {
         require(lenderLock== false);_;
-
     }
     
     //PAYABLE FUNCTION:
@@ -69,7 +70,7 @@ contract SimpleBond
         Issuer = msg.sender;
         twentyPercent = msg.value; 
         Amount = 5*(this.balance);
-        issuerPaid('Issuer deposited 20% into the contract', Issuer, msg.value);
+        txnOccured('Issuer deposited 20% into the contract', Issuer, msg.value);
         }
         else throw;
     }
@@ -82,7 +83,7 @@ contract SimpleBond
             Lender = msg.sender;
             if(msg.value != Amount)throw;
             balances[Issuer] += msg.value;
-            lenderPaid('Lender deposited loan into the contract', Lender, msg.value);
+            txnOccured('Lender deposited loan into the contract', Lender, msg.value);
             return balances[Issuer];
         }
         else throw;
@@ -91,7 +92,7 @@ contract SimpleBond
     function issuerRepayment() payable onlyIssuer returns(uint256 lenderBal)
     {
         balances[Lender] += msg.value;
-        issuerRepaid('Issuer repayed the loan', Issuer, msg.value);
+        txnOccured('Issuer repayed the loan', Issuer, msg.value);
         return balances[Lender];
     }
     
@@ -99,7 +100,7 @@ contract SimpleBond
     function couponPayment() payable onlyIssuer public returns(uint256 lenderBal)
     {
         balances[Lender] += msg.value;
-        couponDeposited('Issuer deposited coupon payment', Issuer, msg.value);
+        txnOccured('Issuer deposited coupon payment', Issuer, msg.value);
         return balances[Lender];
     }
     
@@ -110,7 +111,7 @@ contract SimpleBond
 
                 Issuer.transfer(withdrawAmount);
                 
-                issuerWithdrew('Issuer withdrew money from the contract', Issuer, withdrawAmount);
+                txnOccured('Issuer withdrew money from the contract', Issuer, withdrawAmount);
             
             }
             return balances[Issuer];
@@ -124,7 +125,7 @@ contract SimpleBond
             balances[Issuer] += twentyPercent;
             
             Lender.transfer(withdrawAmount);
-            lenderWithdrewSuccess('Lender withdrew repayment. 20% unlocked for Issuer', Lender, withdrawAmount);
+            txnOccured('Lender withdrew repayment. 20% unlocked for Issuer', Lender, withdrawAmount);
         }
 
         return balances[Lender];
@@ -136,7 +137,7 @@ contract SimpleBond
             balances[Lender] -= withdrawAmount;
             
             Lender.transfer(withdrawAmount);
-            lenderWithdrewFail('Issuer did not repay loan, therefore lender withdrew the 20%', Lender, withdrawAmount);
+            txnOccured('Issuer did not repay loan, therefore lender withdrew the 20%', Lender, withdrawAmount);
         }
         return balances[Lender];
     }
@@ -147,7 +148,7 @@ contract SimpleBond
             balances[Lender] -= withdrawAmount;
             
             Lender.transfer(withdrawAmount);
-            couponWithdrew('Lender withdrew coupon payment', Lender, withdrawAmount);
+            txnOccured('Lender withdrew coupon payment', Lender, withdrawAmount);
         }
 
         return balances[Lender];
