@@ -19,6 +19,8 @@ contract SimpleBond
     event lenderWithdrewSuccess(string _msg, address user, uint amount);
     event issuerRepaid(string _msg, address user, uint amount);
     event issuerWithdrew(string _msg, address user, uint amount);
+    event couponDeposited(string _msg, address user, uint amount);
+    event couponWithdrew(string _msg, address user, uint amount);
      
     //MODIFIERS:
     modifier onlyIssuer()
@@ -77,8 +79,16 @@ contract SimpleBond
         return balances[Lender];
     }
     
+    //CALL IF THE ISSUER WANTS TO PAY INTEREST PAYMENT
+    function couponPayment() payable onlyIssuer public returns(uint256 lenderBal)
+    {
+        balances[Lender] += msg.value;
+        couponDeposited('Issuer deposited coupon payment', Issuer, msg.value);
+        return balances[Lender];
+    }
+    
     //WITHDRAW FUNCTIONS:
-    function issuerWithdraw(uint withdrawAmount) onlyIssuer public returns (uint issuerBal) {
+    function issuerWithdraw(uint withdrawAmount) onlyIssuer public returns (uint256 issuerBal) {
             if(balances[Issuer] >= withdrawAmount) {
                 balances[Issuer] -= withdrawAmount;
 
@@ -91,7 +101,7 @@ contract SimpleBond
     }
     
     //CALL IF ISSUER REPAYS THE DEBT
-    function lenderWithdrawSuccess(uint withdrawAmount) onlyLender public returns (uint lenderBal) {
+    function lenderWithdrawSuccess(uint withdrawAmount) onlyLender public returns (uint256 lenderBal) {
         if(balances[Lender] == withdrawAmount) {
             
             balances[Lender] -= withdrawAmount;
@@ -112,6 +122,18 @@ contract SimpleBond
             Lender.transfer(withdrawAmount);
             lenderWithdrewFail('Issuer did not repay loan, therefore lender withdrew the 20%', Lender, withdrawAmount);
         }
+        return balances[Lender];
+    }
+    
+    //CALL IF LENDER WITHDRAWS COUPON PAYMENT
+    function couponWithdraw(uint withdrawAmount) onlyLender public returns (uint256 lenderBal) {
+        if(balances[Lender] == withdrawAmount) {
+            balances[Lender] -= withdrawAmount;
+            
+            Lender.transfer(withdrawAmount);
+            couponWithdrew('Lender withdrew coupon payment', Lender, withdrawAmount);
+        }
+
         return balances[Lender];
     }
     
