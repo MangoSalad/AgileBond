@@ -8,6 +8,8 @@ contract SimpleBond
     uint256 private Amount;
     uint256 private twentyPercent;
     uint private creationTime = now;
+    bool public issuerLock;
+    bool public lenderLock;
     
     //MAPPING:
     mapping(address => uint) balances;
@@ -46,11 +48,24 @@ contract SimpleBond
         
     }
     
+    modifier issuerLocked()
+    {
+        require(issuerLock== false);_;
+
+    }
+    
+    modifier lenderLocked()
+    {
+        require(lenderLock== false);_;
+
+    }
+    
     //PAYABLE FUNCTION:
-    function Issuer20() payable
+    function Issuer20() payable issuerLocked
     {
         if(msg.sender !=Lender)
         {
+        issuerLock = true;
         Issuer = msg.sender;
         twentyPercent = msg.value; 
         Amount = 5*(this.balance);
@@ -59,10 +74,11 @@ contract SimpleBond
         else throw;
     }
     
-    function lenderBond() payable returns(uint256 IssuerBal)
+    function lenderBond() payable lenderLocked returns(uint256 IssuerBal)
     {
         if(msg.sender != Issuer)
         { 
+            lenderLock = true;
             Lender = msg.sender;
             if(msg.value != Amount)throw;
             balances[Issuer] += msg.value;
