@@ -31,14 +31,12 @@ contract SimpleBond
     //MODIFIERS:
     modifier onlyIssuer()
     {
-        require(msg.sender == Issuer);
-        _;
+        require(msg.sender == Issuer);_;
     }
     
         modifier onlyLender()
     {
-        require(msg.sender == Lender);
-        _;
+        require(msg.sender == Lender);_;
     }
     
     modifier noCouponPaymentsDue()
@@ -85,9 +83,9 @@ contract SimpleBond
     {
         if(msg.sender != Issuer)
         { 
+            if(msg.value != Amount)throw;
             lenderLock = true;
             Lender = msg.sender;
-            if(msg.value != Amount)throw;
             balances[Issuer] += msg.value;
             txnOccured('Lender deposited loan into the contract', Lender, msg.value);
             return balances[Issuer];
