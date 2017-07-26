@@ -7,6 +7,7 @@ contract SimpleBond
     address public Lender;
     uint256 private Amount;
     uint256 private twentyPercent;
+    uint256 private couponPayments;
     uint private creationTime = now;
     bool public issuerLock;
     bool public lenderLock;
@@ -38,6 +39,11 @@ contract SimpleBond
     {
         require(msg.sender == Lender);
         _;
+    }
+    
+    modifier noCouponPaymentsDue()
+    {
+        require(couponPayments == 0);_;
     }
     
     modifier notPaid() 
@@ -97,11 +103,11 @@ contract SimpleBond
     }
     
     //CALL IF THE ISSUER WANTS TO PAY INTEREST PAYMENT
-    function couponPayment() payable onlyIssuer public returns(uint256 lenderBal)
+    function couponPayment() payable onlyIssuer public returns(uint256 couponBal)
     {
-        balances[Lender] += msg.value;
+        couponPayments += msg.value;
         txnOccured('Issuer deposited coupon payment', Issuer, msg.value);
-        return balances[Lender];
+        return couponPayments;
     }
     
     //WITHDRAW FUNCTIONS:
@@ -118,7 +124,7 @@ contract SimpleBond
     }
     
     //CALL IF ISSUER REPAYS THE DEBT
-    function lenderWithdrawSuccess(uint withdrawAmount) onlyLender public returns (uint256 lenderBal) {
+    function lenderWithdrawSuccess(uint withdrawAmount) onlyLender noCouponPaymentsDue public returns (uint256 lenderBal) {
         if(balances[Lender] == withdrawAmount) {
             
             balances[Lender] -= withdrawAmount;
@@ -143,15 +149,15 @@ contract SimpleBond
     }
     
     //CALL IF LENDER WITHDRAWS COUPON PAYMENT
-    function couponWithdraw(uint withdrawAmount) onlyLender public returns (uint256 lenderBal) {
-        if(balances[Lender] == withdrawAmount) {
-            balances[Lender] -= withdrawAmount;
+    function couponWithdraw(uint withdrawAmount) onlyLender public returns (uint256 couponBal) {
+        if(couponPayments == withdrawAmount) {
+            couponPayments -= withdrawAmount;
             
             Lender.transfer(withdrawAmount);
             txnOccured('Lender withdrew coupon payment', Lender, withdrawAmount);
         }
 
-        return balances[Lender];
+        return couponPayments;
     }
     
     
