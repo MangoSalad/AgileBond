@@ -1,0 +1,18 @@
+extends layout.pug
+	
+block content
+	.panel.panel-default
+	.panel-heading
+		h1 Issue
+	.panel-body
+		form(action='/result', method='POST')
+			div.form-group
+				label(for='name') Name:
+				input#name.form-control(type='text', placeholder='What is your Company Name?' name='name')
+			div.form-group
+				label(for='description') Description:
+				input#description.form-control(type='text', placeholder='Why are you raising money?' name='description')
+			div.form-group
+				label(for='rate') Rate:
+				input#rate.form-control(type='text', placeholder='What is the bond rate?' name='rate')
+			button.btn.btn-primary(type='submit') Issue Bond

@@ -1,0 +1,32 @@
+extends layout.pug
+	
+block content
+	style.
+		tbody tr {height:20px; width:18%;}
+		tbody tt {overflow:hidden; overflow-y:scroll;}
+	.row
+		.col-md-4
+			.panel.panel-default
+			.panel-heading
+				h1
+			.panel-body
+				button(onClick="location.href = '/issue';",method='POST') Issue Bond
+		.col-md-8
+			.panel.panel-default
+			.panel-heading
+				h1 Bonds Issued
+			.panel-body
+				table.table
+					thead
+						tr
+							th Description
+							th Issuer
+							th Rate (%)
+							th Balance
+					tbody
+						each i in contract
+							tr
+								td #{i.name}
+								td #{i.issuer}
+								td #{i.rate}
+								td #{i.balance}
