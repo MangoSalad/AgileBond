@@ -1,4 +1,4 @@
-pragma solidity ^0.4.11;
+pragma solidity ^0.4.14;
 
 contract SimpleBond 
 {
@@ -17,6 +17,7 @@ contract SimpleBond
     
     //EVENTS:
     event txnOccured(string _msg, address user, uint amount);
+    event killContract(string _msg);
     
     /*
     event lenderPaid(string _msg, address user, uint amount);
@@ -46,13 +47,12 @@ contract SimpleBond
     
     modifier notPaid() 
     {
-        if(now >= creationTime+10 seconds)
+        if(now >= creationTime + 10 seconds)
         {
         balances[Lender] += twentyPercent;
         _;
         }
         else throw;
-        
     }
     
     modifier issuerLocked()
@@ -83,7 +83,7 @@ contract SimpleBond
     {
         if(msg.sender != Issuer)
         { 
-            if(msg.value != Amount)throw;
+            require(msg.value == Amount);
             lenderLock = true;
             Lender = msg.sender;
             balances[Issuer] += msg.value;
@@ -158,6 +158,12 @@ contract SimpleBond
         return couponPayments;
     }
     
+    /*
+    suicide()
+    {
+       killContract('Contract has been killed');
+    }
+    */
     
     //GETTERS:
     function getBalance() constant returns(uint256)
