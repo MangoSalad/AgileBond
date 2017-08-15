@@ -1,119 +1,178 @@
-pragma solidity ^0.4.0;
-  
-contract bond {
-  function bond() {
-    // constructor
-  }
-contract Issuer
-{
-    //STATE VARIABLES
-    address public Issuer;
-    uint256 public Amount;
-    uint256 public Balance;
-    address public Borrower;
-    
-    //EVENTS: will create a log in the block that is created from a setter
-    event UserStatus(string _msg, address user,string _msg1, uint amount);
-    
-    //CONSTRUCTOR: this will be called as soon as the contract is executed **** Must name function same as contract to get the address***
-    function Issuer()
-    {
-        Issuer = msg.sender;
-    }
-    
-    
-    //MODIFIERS:
-    modifier OnlyIssuer
-    {
-        if(Issuer != msg.sender)throw;
-        else _;
-    }
-    
-    //allows money to be put into contract
-    function Issuer20() payable
-    {
-        //This will log a message and the amount of money deposited ont he blockchain
-        UserStatus('User: ',msg.sender,'has deposited 20%: ', msg.value);
-        Balance = this.balance;
-        Amount=5*(this.balance);
-    }
-    
-    //GETTERS:
-    function passAmount() constant returns (uint256)
-    {
-        return Amount;
-    }
-    
-    function passIssuer() constant returns (address)
-    {
-        return Issuer;
-    }
-    
-        function getBalance() constant returns(uint)
-    {
-        return this.balance;
-    }
-}
+pragma solidity ^0.4.14;
 
-//CONTRACT:
-contract Lender
+contract SimpleBond 
 {
-    //STATE VARIABLES
+    //STATE VARIABLES:
+    address public Issuer;
     address public Lender;
-    bool public _switch = false;
+    uint256 private Amount;
+    uint256 private twentyPercent;
+    uint256 private couponPayments;
+    uint private creationTime = now;
+    bool public issuerLock;
+    bool public lenderLock;
     
-    uint Test;
+    //MAPPING:
+    mapping(address => uint) balances;
     
-    //CONSTRUCTOR:
-    function Lender()
+    //EVENTS:
+    event txnOccured(string _msg, address user, uint amount);
+    event killContract(string _msg);
+    
+    /*
+    event lenderPaid(string _msg, address user, uint amount);
+    event lenderWithdrewFail(string _msg, address user, uint amount);
+    event lenderWithdrewSuccess(string _msg, address user, uint amount);
+    event issuerRepaid(string _msg, address user, uint amount);
+    event issuerWithdrew(string _msg, address user, uint amount);
+    event couponDeposited(string _msg, address user, uint amount);
+    event couponWithdrew(string _msg, address user, uint amount);
+     */
+     
+    //MODIFIERS:
+    modifier onlyIssuer()
     {
-        if (msg.sender != toBePassed.passIssuer()) Lender = msg.sender;
+        require(msg.sender == Issuer);_;
+    }
+    
+        modifier onlyLender()
+    {
+        require(msg.sender == Lender);_;
+    }
+    
+    modifier noCouponPaymentsDue()
+    {
+        require(couponPayments == 0);_;
+    }
+    
+    modifier notPaid() 
+    {
+        if(now >= creationTime + 10 seconds)
+        {
+        balances[Lender] += twentyPercent;
+        _;
+        }
         else throw;
     }
     
-    //MODIFIERS
-    modifier OnlyIssuer
+    modifier issuerLocked()
     {
-        if(toBePassed.passIssuer() != msg.sender)throw;
-        else _;
+        require(issuerLock== false);_;
     }
     
-    //PASS VARIABLES BETWEEN CONTRACTS: ***Must put address of Issuer Contract Here***
-    Issuer toBePassed = Issuer(0xc00430870bd4d4bd891bf2424ae00277bd9a5f09);
-    
-    //VARIABLES BEING PASSED
-    function passAmount() constant returns (uint)
+    modifier lenderLocked()
     {
-        return toBePassed.passAmount();
+        require(lenderLock== false);_;
     }
     
-    function passIssuer() constant returns (address)
+    //PAYABLE FUNCTION:
+    function Issuer20() payable issuerLocked
     {
-        return toBePassed.passIssuer();
+        if(msg.sender !=Lender)
+        {
+        issuerLock = true;
+        Issuer = msg.sender;
+        twentyPercent = msg.value; 
+        Amount = 5*(this.balance);
+        txnOccured('Issuer deposited 20% into the contract', Issuer, msg.value);
+        }
+        else throw;
     }
     
-    //PAYABLE FUNCTION
-    function LenderBond() payable
+    function lenderBond() payable lenderLocked returns(uint256 IssuerBal)
     {
-        if(msg.value != (toBePassed.passAmount()))throw;
+        if(msg.sender != Issuer)
+        { 
+            require(msg.value == Amount);
+            lenderLock = true;
+            Lender = msg.sender;
+            balances[Issuer] += msg.value;
+            txnOccured('Lender deposited loan into the contract', Lender, msg.value);
+            return balances[Issuer];
+        }
+        else throw;
     }
     
-    //GETTERS
-    function getBalance() constant returns(uint)
+    function issuerRepayment() payable onlyIssuer returns(uint256 lenderBal)
+    {
+        balances[Lender] += msg.value;
+        txnOccured('Issuer repayed the loan', Issuer, msg.value);
+        return balances[Lender];
+    }
+    
+    //CALL IF THE ISSUER WANTS TO PAY INTEREST PAYMENT
+    function couponPayment() payable onlyIssuer public returns(uint256 couponBal)
+    {
+        couponPayments += msg.value;
+        txnOccured('Issuer deposited coupon payment', Issuer, msg.value);
+        return couponPayments;
+    }
+    
+    //WITHDRAW FUNCTIONS:
+    function issuerWithdraw(uint withdrawAmount) onlyIssuer public returns (uint256 issuerBal) {
+            if(balances[Issuer] >= withdrawAmount) {
+                balances[Issuer] -= withdrawAmount;
+
+                Issuer.transfer(withdrawAmount);
+                
+                txnOccured('Issuer withdrew money from the contract', Issuer, withdrawAmount);
+            
+            }
+            return balances[Issuer];
+    }
+    
+    //CALL IF ISSUER REPAYS THE DEBT
+    function lenderWithdrawSuccess(uint withdrawAmount) onlyLender noCouponPaymentsDue public returns (uint256 lenderBal) {
+        if(balances[Lender] == withdrawAmount) {
+            
+            balances[Lender] -= withdrawAmount;
+            balances[Issuer] += twentyPercent;
+            
+            Lender.transfer(withdrawAmount);
+            txnOccured('Lender withdrew repayment. 20% unlocked for Issuer', Lender, withdrawAmount);
+        }
+
+        return balances[Lender];
+    }
+    
+    //CALL IF THE ISSUER DOES NOT REPAY THE DEBT
+    function lenderWithdrawFail(uint withdrawAmount) onlyLender notPaid public returns (uint256 lenderBal) {
+        if(balances[Lender] >= withdrawAmount) {
+            balances[Lender] -= withdrawAmount;
+            
+            Lender.transfer(withdrawAmount);
+            txnOccured('Issuer did not repay loan, therefore lender withdrew the 20%', Lender, withdrawAmount);
+        }
+        return balances[Lender];
+    }
+    
+    //CALL IF LENDER WITHDRAWS COUPON PAYMENT
+    function couponWithdraw(uint withdrawAmount) onlyLender public returns (uint256 couponBal) {
+        if(couponPayments == withdrawAmount) {
+            couponPayments -= withdrawAmount;
+            
+            Lender.transfer(withdrawAmount);
+            txnOccured('Lender withdrew coupon payment', Lender, withdrawAmount);
+        }
+
+        return couponPayments;
+    }
+    
+    /*
+    function suicideContract()
+    {
+    suicide()
+    killContract('Contract has been killed');
+    }
+    */
+    
+    //GETTERS:
+    function getBalance() constant returns(uint256)
     {
         return this.balance;
     }
-    
-    function withdrawFunds(uint Withdraw) OnlyIssuer
+    function getIssuer() constant returns(uint256)
     {
-        
-        if(toBePassed.passIssuer().send(Withdraw))
-        {
-            _switch = true;
-        }
-       else
-        {
-            _switch = false;
- }
+        return balances[Issuer];
     }
-  }
+}
