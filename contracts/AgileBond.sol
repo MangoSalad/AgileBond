@@ -1,6 +1,6 @@
 pragma solidity ^0.4.14;
 
-contract SimpleBond 
+contract AgileBond
 {
     //STATE VARIABLES:
     address public Issuer;

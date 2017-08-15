@@ -4,80 +4,225 @@ block content
 	style.
 		tbody tr {height:20px; width:18%;}
 		tbody tt {overflow:hidden; overflow-y:scroll;}
+		.img-props{
+		  border-style:solid;
+		  border-radius: 70%;
+		  margin-top: 100px;
+		  margin-left: 225px;
+		}
+		.txt-props{
+		  margin-left:400px;
+		  color:white;
+		  font-family: 'Saira', sans-serif;
+		  font-size: 40px
+		}
+		.large{
+		  height: 500px;
+		}
+		.logos{
+		  margin-top: 50px;
+		  margin-left: 20px;
+		}
+		.bck-img{
+		  background-image: http://user-images.githubusercontent.com/25569545/29087301-784f4964-7c43-11e7-9cef-bef3d2f4fe36.png');
+		  background-size: 1450px 500px;
+		  background-repeat: no-repeat;
+		  background-position: left top;
+		}
+		.logo-size{
+		  width:20%;
+		  height:auto;
+		  position: absolute;
+		  left: 40%;
+		}
+		ul {
+			padding:0;
+			list-style: none;
+		}
+		li{
+		  margin: 50px;
+		}
+		.footer-social-icons {
+			width: 600px;
+			display:block;
+			margin: 0 auto;
+		}
+		.social-icon {
+			color: #fff;
+		  
+		}
+		ul.social-icons {
+			margin-top: 30px;
+		}
+		.social-icons li {
+			vertical-align: top;
+			display: inline;
+			height: 100px;
+		}
+		.fa{
+		  border-radius: 50%;
+		}
+		.social-icons a {
+			color: #fff;
+			text-decoration: none;
+			font-size:30px;
+		}
+		.fa-facebook {
+			padding:10px 14px;
+			-o-transition:.5s;
+			-ms-transition:.5s;
+			-moz-transition:.5s;
+			-webkit-transition:.5s;
+			transition: .5s;
+			background-color: #322f30;
+		}
+		.fa-facebook:hover {
+			background-color: #3d5b99;
+		}
+		.fa-twitter {
+			padding:10px 12px;
+			-o-transition:.5s;
+			-ms-transition:.5s;
+			-moz-transition:.5s;
+			-webkit-transition:.5s;
+			transition: .5s;
+			background-color: #322f30;
+		}
+		.fa-twitter:hover {
+			background-color: #00aced;
+		}
+		.fa-github {
+			padding:10px 14px;
+			-o-transition:.5s;
+			-ms-transition:.5s;
+			-moz-transition:.5s;
+			-webkit-transition:.5s;
+			transition: .5s;
+			background-color: #322f30;
+		}
+		.fa-github:hover {
+			background-color: #eb8231;
+		}
+		.fa-youtube {
+			padding:10px 14px;
+			-o-transition:.5s;
+			-ms-transition:.5s;
+			-moz-transition:.5s;
+			-webkit-transition:.5s;
+			transition: .5s;
+			background-color: #322f30;
+		}
+		.fa-youtube:hover {
+			background-color: #e64a41;
+		}
+		.text-center{
+		  text-align: center;
+		}
+		.purpose{
+		  margin-bottom: 100px;
+		  display: block;
+		  padding-left:150px;
+		  padding-right:150px;
+		  font-family: 'Saira', sans-serif;
+		  font-size: 30px
+		}
+		.titles{
+		  font-family: 'Saira', sans-serif !important;
+		  font-size:70px !important;
+		  font-weight:700 !important;
+		  margin-bottom:50px !important;
+		  font-color: black !important;
+		}
+		.goals{
+		  font-family: 'Saira', sans-serif;
+		  margin-bottom: 100px;
+		}
+		hr {
+			display: block;
+			height: 1px;
+			border: 0;
+			border-top: 1px solid #ccc;
+			margin: 1em 300px;
+			padding-left: 0;
+		}
+
+		.goals-props{
+		  margin-top: 30px;
+		  padding-left:30px;
+		  padding-right:30px;
+		  font-size: 20px;
+		  font-color: #838383;
+		} 
+		.title-space{
+		  margin-top: 50px;
+		}
+		.full-width{
+		  width:100%;
+		}
+	.container.purpose
 	.row
-		.container.purpose
-  .row
-    .col-md-12
-      h1.text-center.titles Purpose
-      p.text-center
-        | Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis fermentum tempor orci mattis facilisis. Ut pharetra eros felis, at cursus odio laoreet a. Etiam vitae sem non enim tristique bibendum. Nam consequat lorem in nulla lacinia, id luctus lacus ultrices. Nulla lacinia diam enim, at mollis erat pretium consequat. Ut dignissim, nunc quis blandit pharetra, nunc diam efficitur orci, ut sodales purus sem sit amet tortor. Suspendisse auctor ligula sit amet lectus tristique, vel congue massa pretium. Maecenas ornare scelerisque lacinia.
-hr
-// Goals
-.container.goals
-  h1.text-center.titles.title-space Goals
-  .row
-    .col-md-4.text-center.temp-border
-      h1
-        | Hello World
-      p.goals-props
-        | Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis fermentum tempor orci mattis facilisis. Ut pharetra eros felis, at cursus odio laoreet a.
-    .col-md-4.text-center.temp-border
-      h1
-        | Hello World
-      p.goals-props
-        | Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis fermentum tempor orci mattis facilisis. Ut pharetra eros felis, at cursus odio laoreet a.
-    .col-md-4.text-center.temp-border
-      h1
-        | Hello World
-      p.goals-props
-        | Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis fermentum tempor orci mattis facilisis. Ut pharetra eros felis, at cursus odio laoreet a.
-hr
-// Team
-.full-width
-  p.text-center.titles.title-space Team
-  #myCarousel.carousel.slide(data-ride='carousel')
-    // Indicators
-    ol.carousel-indicators
-      li.active(data-target='#myCarousel', data-slide-to='0')
-      li(data-target='#myCarousel', data-slide-to='1')
-      li(data-target='#myCarousel', data-slide-to='2')
-    // Wrapper for slides
-    .carousel-inner.large.bck-img
-      .item.active
-        img.img-props(src='http://cademartin.com/wp-content/gallery/portraits/martinPortraits0026.jpg', alt='Los Angeles', style='width:300px;')
-        .carousel-caption.txt-props
-          h3 Los Angeles
-          p LA is always so much fun!
-      .item
-        img.img-props(src='https://i.stack.imgur.com/bf7tS.jpg', alt='Chicago', style='width:300px;')
-        .carousel-caption.txt-props
-          h3 Chicago
-          p Thank you, Chicago!
-      .item
-        img.img-props(src='https://d1w5usc88actyi.cloudfront.net/wp-content/uploads/2013/01/Centurian-portraits-Karsten-Thormaehlen-2.jpg', alt='New York', style='width:300px;height:200px;')
-        .carousel-caption.txt-props
-          h3 New York
-          p We love the Big Apple!
-    // Left and right controls
-    a.left.carousel-control(href='#myCarousel', data-slide='prev')
-      span.glyphicon.glyphicon-chevron-left
-      span.sr-only Previous
-    a.right.carousel-control(href='#myCarousel', data-slide='next')
-      span.glyphicon.glyphicon-chevron-right
-      span.sr-only Next
-// Social Buttons
-.container
-  .footer-social-icons
-    ul.social-icons
-      li
-        a.social-icon(href='#')
-          i.fa.fa-facebook
-      li
-        a.social-icon(href='#')
-          i.fa.fa-twitter
-      li
-        a.social-icon(href='#')
-          i.fa.fa-github
-      li
-        a.social-icon(href='#')
-          i.fa.fa-youtube
+		.col-md-12
+			h1.text-center.titles Purpose
+			p.text-center
+				| Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis fermentum tempor orci mattis facilisis. Ut pharetra eros felis, at cursus odio laoreet a. Etiam vitae sem non enim tristique bibendum. Nam consequat lorem in nulla lacinia, id luctus lacus ultrices. Nulla lacinia diam enim, at mollis erat pretium consequat. Ut dignissim, nunc quis blandit pharetra, nunc diam efficitur orci, ut sodales purus sem sit amet tortor. Suspendisse auctor ligula sit amet lectus tristique, vel congue massa pretium. Maecenas ornare scelerisque lacinia.
+	hr
+	.container.goals
+		h1.text-center.titles.title-space Goals
+		.row
+			.col-md-4.text-center.temp-border
+				h1
+					| Hello World
+				p.goals-props
+					| Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis fermentum tempor orci mattis facilisis. Ut pharetra eros felis, at cursus odio laoreet a.
+			.col-md-4.text-center.temp-border
+				h1
+					| Hello World
+				p.goals-props
+					| Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis fermentum tempor orci mattis facilisis. Ut pharetra eros felis, at cursus odio laoreet a.
+			.col-md-4.text-center.temp-border
+				h1
+					| Hello World
+				p.goals-props
+					| Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis fermentum tempor orci mattis facilisis. Ut pharetra eros felis, at cursus odio laoreet a.
+	hr
+	.full-width
+		.carousel-inner.large.bck-img
+			.item.active
+				img.img-props(src=' http://cademartin.com/wp-content/gallery/portraits/martinPortraits0026.jpg ', alt='Los Angeles', style='width:300px;')
+				.carousel-caption.txt-props
+					h3 Los Angeles
+					p LA is always so much fun!
+			.item
+				img.img-props(src=' https://i.stack.imgur.com/bf7tS.jpg ', alt='Chicago', style='width:300px;')
+				.carousel-caption.txt-props
+					h3 Chicago
+					p Thank you, Chicago!
+			.item
+				img.img-props(src=' https://d1w5usc88actyi.cloudfront.net/wp-content/uploads/2013/01/Centurian-portraits-Karsten-Thormaehlen-2.jpg ', alt='New York', style='width:300px;height:200px;')
+				.carousel-caption.txt-props
+					h3 New York
+					p We love the Big Apple!
+		// Left and right controls
+		a.left.carousel-control(href='#myCarousel', data-slide='prev')
+			span.glyphicon.glyphicon-chevron-left
+			span.sr-only Previous
+		a.right.carousel-control(href='#myCarousel', data-slide='next')
+			span.glyphicon.glyphicon-chevron-right
+			span.sr-only Next
+		// Social Buttons
+		.container
+			.footer-social-icons
+				ul.social-icons
+					li
+						a.social-icon(href='#')
+							i.fa.fa-facebook
+					li
+						a.social-icon(href='#')
+							i.fa.fa-twitter
+					li
+						a.social-icon(href='#')
+							i.fa.fa-github
+					li
+						a.social-icon(href='#')
+							i.fa.fa-youtube
+
