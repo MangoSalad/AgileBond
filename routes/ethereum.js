@@ -8,7 +8,6 @@ var abi = [{"constant":true,"inputs":[],"name":"lenderLock","outputs":[{"name":"
 //object storing contract addresses
 contractAddresses = [];
 contractAddresses.push("0x60726a208d34d9891cd1b071c21c9864c161b7a4");
-console.log(contractAddresses)
 
 //connect to contract instances
 var AgileBond = web3.eth.contract(abi);
