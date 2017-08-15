@@ -5,11 +5,79 @@ block content
 		tbody tr {height:20px; width:18%;}
 		tbody tt {overflow:hidden; overflow-y:scroll;}
 	.row
-		.col-md-4
-			.panel.panel-default
-			.panel-body
-				h1 This is the about page.
-		.col-md-8
-			.panel.panel-default
-			.panel-body
-				p Some info
+		.container.purpose
+  .row
+    .col-md-12
+      h1.text-center.titles Purpose
+      p.text-center
+        | Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis fermentum tempor orci mattis facilisis. Ut pharetra eros felis, at cursus odio laoreet a. Etiam vitae sem non enim tristique bibendum. Nam consequat lorem in nulla lacinia, id luctus lacus ultrices. Nulla lacinia diam enim, at mollis erat pretium consequat. Ut dignissim, nunc quis blandit pharetra, nunc diam efficitur orci, ut sodales purus sem sit amet tortor. Suspendisse auctor ligula sit amet lectus tristique, vel congue massa pretium. Maecenas ornare scelerisque lacinia.
+hr
+// Goals
+.container.goals
+  h1.text-center.titles.title-space Goals
+  .row
+    .col-md-4.text-center.temp-border
+      h1
+        | Hello World
+      p.goals-props
+        | Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis fermentum tempor orci mattis facilisis. Ut pharetra eros felis, at cursus odio laoreet a.
+    .col-md-4.text-center.temp-border
+      h1
+        | Hello World
+      p.goals-props
+        | Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis fermentum tempor orci mattis facilisis. Ut pharetra eros felis, at cursus odio laoreet a.
+    .col-md-4.text-center.temp-border
+      h1
+        | Hello World
+      p.goals-props
+        | Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis fermentum tempor orci mattis facilisis. Ut pharetra eros felis, at cursus odio laoreet a.
+hr
+// Team
+.full-width
+  p.text-center.titles.title-space Team
+  #myCarousel.carousel.slide(data-ride='carousel')
+    // Indicators
+    ol.carousel-indicators
+      li.active(data-target='#myCarousel', data-slide-to='0')
+      li(data-target='#myCarousel', data-slide-to='1')
+      li(data-target='#myCarousel', data-slide-to='2')
+    // Wrapper for slides
+    .carousel-inner.large.bck-img
+      .item.active
+        img.img-props(src='http://cademartin.com/wp-content/gallery/portraits/martinPortraits0026.jpg', alt='Los Angeles', style='width:300px;')
+        .carousel-caption.txt-props
+          h3 Los Angeles
+          p LA is always so much fun!
+      .item
+        img.img-props(src='https://i.stack.imgur.com/bf7tS.jpg', alt='Chicago', style='width:300px;')
+        .carousel-caption.txt-props
+          h3 Chicago
+          p Thank you, Chicago!
+      .item
+        img.img-props(src='https://d1w5usc88actyi.cloudfront.net/wp-content/uploads/2013/01/Centurian-portraits-Karsten-Thormaehlen-2.jpg', alt='New York', style='width:300px;height:200px;')
+        .carousel-caption.txt-props
+          h3 New York
+          p We love the Big Apple!
+    // Left and right controls
+    a.left.carousel-control(href='#myCarousel', data-slide='prev')
+      span.glyphicon.glyphicon-chevron-left
+      span.sr-only Previous
+    a.right.carousel-control(href='#myCarousel', data-slide='next')
+      span.glyphicon.glyphicon-chevron-right
+      span.sr-only Next
+// Social Buttons
+.container
+  .footer-social-icons
+    ul.social-icons
+      li
+        a.social-icon(href='#')
+          i.fa.fa-facebook
+      li
+        a.social-icon(href='#')
+          i.fa.fa-twitter
+      li
+        a.social-icon(href='#')
+          i.fa.fa-github
+      li
+        a.social-icon(href='#')
+          i.fa.fa-youtube
