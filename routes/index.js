@@ -9,29 +9,8 @@ var ethereum = require('./ethereum.js');
 router.get('/',(req,res) => {
   var workers=[];
   var contracts
-	// workers.push(function(done){
-	//   	ethereum.selectBonds(function(err, _data) {
-	// 		if(err){ 
-	// 			console.error(err);
-	// 			res.status(500).send("Error - see console");
-	// 			return;
-	// 		}else{   		
-	// 			contracts = _data;  
-	// 			done(); 
-	// 		}
-	// 	})
-	// });
-	workers.push(function(done) {
-		ethereum.initialize({}, function(err) {
-			if ( err ){
-				console.error(err);
-			} else {
-				done();
-			}
-		})
-	});
-	async.parallel(workers, function() {
-		ethereum.selectBonds(function(err, _data) {
+	workers.push(function(done){
+	  	ethereum.selectBonds(function(err, _data) {
 			if(err){ 
 				console.error(err);
 				res.status(500).send("Error - see console");
@@ -41,6 +20,8 @@ router.get('/',(req,res) => {
 				done(); 
 			}
 		})
+	});
+	async.parallel(workers, function() {
 		res.render('index',{contract: contracts});
 	}) 
 });
